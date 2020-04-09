@@ -53,20 +53,6 @@ export default {
     goBack () {
       this.$router.push('/')
     },
-
-    createChat (userQs, userId, friendId, chatId) {
-      const data = {
-        qs: userQs,
-        vk_user_id1: userId,
-        vk_user_id2: friendId
-      }
-      this.socket.emit('createChat', data)
-      this.socket.on('newChat', (data) => {
-        this.$store.dispatch('Fetch_Person_By_Id', data.result.users[1].userId)
-        this.$store.state.chatId = data.result._id
-      })
-    },
-
     sendMessage (userQs, userId, friendId, chatId) {
       this.messages.push(this.msg)
       const date = new Date()
@@ -81,15 +67,37 @@ export default {
           visible: true
         }
       }
-      console.log(data)
       this.socket.emit('sendMessage', data)
+    },
+
+    getMessages (userQs, chatId) {
+      const data = {
+        qs: userQs,
+        chatId: chatId
+      }
+
+      this.socket.emit('getMessages', data)
+    },
+
+    userConnectToChat (userQs, userId, chatId) {
+      const data = {
+        qs: userQs,
+        chatId: chatId,
+        vk_user_id: userId
+      }
+
+      this.socket.emit('userConnectToChat', data)
     }
   },
 
   async mounted () {
     await this.Fetch_Qs()
     await this.Fetch_Id()
-    await this.createChat(this.userQs, this.userId, this.friendId)
+    await this.userConnectToChat(this.userQs, this.userId, this.chatId)
+    await this.getMessages(this.userQs, this.chatId)
+    this.socket.on('getMessages', (data) => {
+      this.messages = data
+    })
   }
 }
 </script>

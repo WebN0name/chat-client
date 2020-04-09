@@ -73,9 +73,11 @@ export default new Vuex.Store({
     async Fetch_Chats ({ commit }, data) {
       var chatList = data.result.chatList
       var dialogs = []
-      for (let i = 0; i < Object.keys(chatList).length - 1; i++) {
+      for (let i = 0; i < Object.keys(chatList).length; i++) {
         dialogs.push(chatList[i].companion)
       }
+      dialogs.reverse()
+      console.log(dialogs)
       try {
         await connect.send('VKWebAppGetAuthToken', { app_id: 7339757, scope: 'friends' })
           .then(async r => {
@@ -90,6 +92,7 @@ export default new Vuex.Store({
                   access_token: token
                 }
               }).then(r => {
+                console.log(r)
                 var companions = r.data.response
                 commit('Set_Dialogs', companions)
               })

@@ -39,12 +39,6 @@
 
     <!-- Provides the application the proper gutter -->
     <v-container fluid>
-
-       <v-text-field
-        label="Поиск"
-        :outlined = true
-        :dense = true
-        ></v-text-field>
         <v-list :avatar = true>
           <v-list-item
           v-for="dialog in this.dialogs"
@@ -78,9 +72,6 @@ export default {
 
   created () {
     this.socket = io('https://secret-chat-ts.herokuapp.com/')
-    this.socket.on('getChats', (data) => {
-      this.$store.dispatch('Fetch_Chats', data)
-    })
   },
 
   computed: {
@@ -120,6 +111,9 @@ export default {
     await this.Fetch_Id()
     await this.newUser(this.userQs, this.userId)
     await this.getChats(this.userQs, this.userId)
+    this.socket.on('getChats', (data) => {
+      this.$store.dispatch('Fetch_Chats', data)
+    })
   },
 
   beforeCreate () {

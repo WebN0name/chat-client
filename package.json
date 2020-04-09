@@ -5,7 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "deploy": "vk-miniapps-deploy",
+    "clean-source": "rimraf README.md src webroot package.json"
   },
   "dependencies": {
     "@vkontakte/vkui-connect": "^1.5.4",
@@ -18,6 +20,7 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
+    "@vkontakte/vk-miniapps-deploy": "0.0.17",
     "@vue/cli-plugin-babel": "~4.3.0",
     "@vue/cli-plugin-eslint": "~4.3.0",
     "@vue/cli-plugin-router": "~4.3.0",
