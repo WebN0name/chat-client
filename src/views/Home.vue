@@ -14,11 +14,12 @@
         label="Поиск"
         :outlined = true
         :dense = true
+        v-model="searchContacts"
         ></v-text-field>
       </div>
       <v-list :avatar = true>
           <v-list-item
-          v-for="friend in this.friends"
+          v-for="friend in filterContacts"
           :key="friend.id"
           @click="toChat(friend.id)"
           >
@@ -43,6 +44,7 @@
           <v-list-item
           v-for="dialog in this.dialogs"
           :key="dialog.id"
+          @click="toDialog(dialog.id)"
           >
              <v-list-item-avatar v-if="avatar">
               <v-img :src="dialog.photo_200"></v-img>
@@ -67,7 +69,8 @@ export default {
   data: () => ({
     drawer: null,
     avatar: true,
-    socket: {}
+    socket: {},
+    searchContacts: ''
   }),
 
   created () {
@@ -75,7 +78,26 @@ export default {
   },
 
   computed: {
-    ...mapState(['userId', 'userQs', 'friends', 'dialogs'])
+    ...mapState(['userId', 'userQs', 'friends', 'dialogs']),
+    filterContacts () {
+      return this.friends.filter(friend => {
+        if (friend.first_name.indexOf(this.searchContacts) !== -1) {
+          return true
+        }
+
+        if (friend.last_name.indexOf(this.searchContacts) !== -1) {
+          return true
+        }
+
+        if ((friend.first_name.toLowerCase()).indexOf(this.searchContacts) !== -1) {
+          return true
+        }
+
+        if ((friend.last_name.toLowerCase()).indexOf(this.searchContacts) !== -1) {
+          return true
+        }
+      })
+    }
   },
 
   methods: {
@@ -102,6 +124,11 @@ export default {
     toChat (friendId) {
       this.$store.state.friendId = friendId
       this.$router.push('Chat')
+    },
+
+    toDialog (friendId) {
+      this.$store.state.friendId = friendId
+      this.$router.push('Dialog')
     }
   },
 

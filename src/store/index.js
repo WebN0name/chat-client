@@ -52,6 +52,16 @@ export default new Vuex.Store({
                 }
               }).then(r => {
                 var friends = r.data.response.items
+                friends.sort((a, b) => {
+                  if (a.first_name > b.first_name) {
+                    return 1
+                  }
+                  if (a.first_name < b.first_name) {
+                    return -1
+                  }
+                  return 0
+                })
+                friends = friends.filter(value => value.first_name !== 'DELETED')
                 this.commit('Set_Friends', friends)
               })
           })
@@ -77,7 +87,7 @@ export default new Vuex.Store({
         dialogs.push(chatList[i].companion)
       }
       dialogs.reverse()
-      console.log(dialogs)
+      dialogs = String(dialogs)
       try {
         await connect.send('VKWebAppGetAuthToken', { app_id: 7339757, scope: 'friends' })
           .then(async r => {
@@ -92,7 +102,6 @@ export default new Vuex.Store({
                   access_token: token
                 }
               }).then(r => {
-                console.log(r)
                 var companions = r.data.response
                 commit('Set_Dialogs', companions)
               })

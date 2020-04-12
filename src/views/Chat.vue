@@ -81,7 +81,6 @@ export default {
           visible: true
         }
       }
-      console.log(data)
       this.socket.emit('sendMessage', data)
     }
   },
